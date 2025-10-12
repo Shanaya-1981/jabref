@@ -144,7 +144,7 @@ class StringUtilTest {
     }
 
     @Test
-    void shaveString_null() {
+    void shaveStringReturnsEmptyWhenNull() {
         assertEquals("", StringUtil.shaveString(null));
     }
 
