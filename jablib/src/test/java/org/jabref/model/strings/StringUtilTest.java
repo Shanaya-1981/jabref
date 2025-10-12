@@ -79,6 +79,7 @@ class StringUtilTest {
             // Unix
             "'\n', 'newline'"
     })
+
     void unifyLineBreaks(String input, String expected) {
         assertEquals(expected, StringUtil.unifyLineBreaks(input, expected));
     }
@@ -93,6 +94,7 @@ class StringUtilTest {
             "a.bb,bib,a.bb",
             ",bib,''"
     })
+
     void getCorrectFileName(String filename, String extension, String expected) {
         assertEquals(expected, StringUtil.getCorrectFileName(filename, extension));
     }
@@ -102,6 +104,7 @@ class StringUtilTest {
             "&#33;,!",
             "&#33;&#33;&#33; , !!!",
     })
+
     void quoteForHTML(String expected, String input) {
         assertEquals(expected, StringUtil.quoteForHTML(input));
     }
@@ -113,6 +116,7 @@ class StringUtilTest {
             "{abc},{abc} ",
             "ABCDEF, {ABC}{DEF}"
     })
+
     void removeBracesAroundCapitals(String expected, String input) {
         assertEquals(expected, StringUtil.removeBracesAroundCapitals(input));
     }
@@ -125,6 +129,7 @@ class StringUtilTest {
             "#ABC#,#ABC#",
             "ABC def EFG,{ABC} def {EFG}"
     })
+
     void putBracesAroundCapitals(String input, String expected) {
         assertEquals(expected, StringUtil.putBracesAroundCapitals(input));
     }
@@ -139,6 +144,7 @@ class StringUtilTest {
             "'  \"{a}\"    ','{a}'",
             "'  \"{a\"}    ','\"{a\"}'"
     })
+
     void shaveString(String input, String expected) {
         assertEquals(expected, StringUtil.shaveString(input));
     }
@@ -156,21 +162,24 @@ class StringUtilTest {
             "'','ab;cd;ed','\\',3,3",
             "'','','\\',0,0"
     })
+
     void join(String expected, String arrayStr, String separator, int from, int to) {
         String[] array = arrayStr.isEmpty() ? new String[0] : arrayStr.split(";");
         assertEquals(expected, StringUtil.join(array, separator, from, to));
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "'foo','[foo]'",
-            "'[foo]','[[foo]]'",
-            "'',''",
-            "'[foo','[foo'",
-            "']',']'",
-            "'','[]'",
-            "'f[]f','f[]f'"
-    })
+    @CsvSource(useHeadersInDisplayName = true, textBlock = """
+    EXPECTED, INPUT
+    foo,      '[foo]'
+    '[foo]',  '[[foo]]'
+    '',       ''
+    '[foo',   '[foo'
+    ']',      ']'
+    '',       '[]'
+    'f[]f',   'f[]f'
+    """)
+
     void stripBrackets(String expected, String input) {
         assertEquals(expected, StringUtil.stripBrackets(input));
     }
@@ -186,6 +195,7 @@ class StringUtilTest {
             // Get the word from the end of the sentence
             "'bite','Barking dogs seldom bite',19,true"
     })
+
     void getPart(String expected, String input, int startIndex, boolean forward) {
         assertEquals(expected, StringUtil.getPart(input, startIndex, forward));
     }
@@ -205,6 +215,7 @@ class StringUtilTest {
             "'aaaaa\n\nbbbbb\nccccc',12,'aaaaanewline\tnewline\tnewline\tbbbbbnewline\tnewline\tccccc'",
             "'aaaaa\r\nbbbbb\r\nccccc',12,'aaaaanewline\tnewline\tbbbbbnewline\tnewline\tccccc'"
     })
+
     void wrap(String input, int wrapLength, String expected) {
         String newline = "newline";
         assertEquals(expected, StringUtil.wrap(input, wrapLength, newline));
@@ -225,52 +236,56 @@ class StringUtilTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "false,''",
-            "true,'{}'",
-            "true,'{a}'",
-            "true,'{a{a}}'",
-            "true,'{{\\AA}sa {\\AA}Stor{\\aa}}'",
-            "false,'{'",
-            "false,'}'",
-            "false,'a{}a'",
-            "false,'{\\AA}sa {\\AA}Stor{\\aa}'"
-    })
+    @CsvSource(textBlock = """
+    false,
+    true,   {}
+    true,   {a}
+    true,   '{a{a}}'
+    true,   '{{\\AA}sa {\\AA}Stor{\\aa}}'
+    false,  {
+    false,  }
+    false,  a{}a
+    false,  '{\\AA}sa {\\AA}Stor{\\aa}'
+    """)
+
     void isInCurlyBrackets(boolean expected, String input) {
         assertEquals(expected, StringUtil.isInCurlyBrackets(input));
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "false,''",
-            "true,'[]'",
-            "true,'[a]'",
-            "false,'['",
-            "false,']'",
-            "false,'a[]a'"
-    })
+    @CsvSource(textBlock = """
+    false,
+    true,   []
+    true,   [a]
+    false,  [
+    false,  ]
+    false,  a[]a
+    """)
+
     void isInSquareBrackets(boolean expected, String input) {
         assertEquals(expected, StringUtil.isInSquareBrackets(input));
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "false,''",
-            "true,'\"\"'",
-            "true,'\"a\"'",
-            "false,'\"'",
-            "false,'a\"\"a'"
-    })
+    @CsvSource(textBlock = """
+    false,
+    true,   ""
+    true,   "a"
+    false,  "
+    false,  a""a
+    """)
+
     void isInCitationMarks(boolean expected, String input) {
         assertEquals(expected, StringUtil.isInCitationMarks(input));
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "1,'1'",
-            "2,'2'",
-            "8,'8'"
-    })
+    @CsvSource(textBlock = """
+    1,  1
+    2,  2
+    8,  8
+    """)
+
     void intValueOfSingleDigit(int expected, String input) {
         assertEquals(expected, StringUtil.intValueOf(input));
     }
@@ -301,11 +316,12 @@ class StringUtilTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "1,'1'",
-            "2,'2'",
-            "8,'8'"
-    })
+    @CsvSource(textBlock = """
+    1,  1
+    2,  2
+    8,  8
+    """)
+
     void intValueOfWithNullSingleDigit(int expected, String input) {
         assertEquals(Optional.of(expected), StringUtil.intValueOfOptional(input));
     }
@@ -342,6 +358,7 @@ class StringUtilTest {
             "'TestTes...', 'TestTestTestTestTest', 10",
             "'', , 10"
     })
+
     void limitStringLength(String expected, String input, int maxLength) {
         assertEquals(expected, StringUtil.limitStringLength(input, maxLength));
     }
@@ -411,6 +428,7 @@ class StringUtilTest {
             "'a:;','a:::;',':'",
             "'a:b%c;','a::b:%c:;',':'"
     })
+
     void unquote(String expected, String input, char quoteChar) {
         assertEquals(expected, StringUtil.unquote(input, quoteChar));
     }
@@ -422,6 +440,7 @@ class StringUtilTest {
             "'A','a'",
             "'Aa','AA'"
     })
+
     void capitalizeFirst(String expected, String input) {
         assertEquals(expected, StringUtil.capitalizeFirst(input));
     }
@@ -437,7 +456,7 @@ class StringUtilTest {
 
     @ParameterizedTest
     @MethodSource("getQuoteStringIfSpaceIsContainedData")
-    void guoteStringIfSpaceIsContained(String expected, String source) {
+    void quoteStringIfSpaceIsContained(String expected, String source) {
         assertEquals(expected, StringUtil.quoteStringIfSpaceIsContained(source));
     }
 
