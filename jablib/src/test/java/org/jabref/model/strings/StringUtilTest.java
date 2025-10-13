@@ -102,7 +102,7 @@ class StringUtilTest {
     @ParameterizedTest
     @CsvSource({
             "&#33;,!",
-            "&#33;&#33;&#33; , !!!",
+            "&#33;&#33;&#33;,!!!"
     })
 
     void quoteForHTML(String expected, String input) {
@@ -112,9 +112,9 @@ class StringUtilTest {
     @ParameterizedTest
     @CsvSource({
             "ABC,{ABC}",
-            "ABC, {{ABC}}",
-            "{abc},{abc} ",
-            "ABCDEF, {ABC}{DEF}"
+            "ABC,{{ABC}}",
+            "{abc},{abc}",
+            "ABCDEF,{ABC}{DEF}"
     })
 
     void removeBracesAroundCapitals(String expected, String input) {
@@ -155,17 +155,17 @@ class StringUtilTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "'ab\\cd\\ed','ab;cd;ed','\\',0,3",
-            "'cd\\ed','ab;cd;ed','\\',1,3",
-            "'ed','ab;cd;ed','\\',2,3",
-            "'','ab;cd;ed','\\',3,3",
-            "'','','\\',0,0"
-    })
+    @CsvSource(textBlock = """
+    'ab\\cd\\ed', 'ab;cd;ed', 0, 3
+    'cd\\ed',     'ab;cd;ed', 1, 3
+    'ed',         'ab;cd;ed', 2, 3
+    '',           'ab;cd;ed', 3, 3
+    '',           '',         0, 0
+    """)
 
-    void join(String expected, String arrayStr, String separator, int from, int to) {
+    void join(String expected, String arrayStr, int from, int to) {
         String[] array = arrayStr.isEmpty() ? new String[0] : arrayStr.split(";");
-        assertEquals(expected, StringUtil.join(array, separator, from, to));
+        assertEquals(expected, StringUtil.join(array, "\\", from, to));
     }
 
     @ParameterizedTest
@@ -238,14 +238,14 @@ class StringUtilTest {
     @ParameterizedTest
     @CsvSource(textBlock = """
     false,
-    true,   {}
-    true,   {a}
-    true,   '{a{a}}'
-    true,   '{{\\AA}sa {\\AA}Stor{\\aa}}'
-    false,  {
-    false,  }
-    false,  a{}a
-    false,  '{\\AA}sa {\\AA}Stor{\\aa}'
+    true, {}
+    true, {a}
+    true, '{a{a}}'
+    true, '{{\\AA}sa {\\AA}Stor{\\aa}}'
+    false, {
+    false, }
+    false, a{}a
+    false, '{\\AA}sa {\\AA}Stor{\\aa}'
     """)
 
     void isInCurlyBrackets(boolean expected, String input) {
@@ -255,11 +255,11 @@ class StringUtilTest {
     @ParameterizedTest
     @CsvSource(textBlock = """
     false,
-    true,   []
-    true,   [a]
-    false,  [
-    false,  ]
-    false,  a[]a
+    true, []
+    true, [a]
+    false, [
+    false, ]
+    false, a[]a
     """)
 
     void isInSquareBrackets(boolean expected, String input) {
@@ -269,10 +269,10 @@ class StringUtilTest {
     @ParameterizedTest
     @CsvSource(textBlock = """
     false,
-    true,   ""
-    true,   "a"
-    false,  "
-    false,  a""a
+    true, ""
+    true, "a"
+    false, "
+    false, a""a
     """)
 
     void isInCitationMarks(boolean expected, String input) {
@@ -280,11 +280,11 @@ class StringUtilTest {
     }
 
     @ParameterizedTest
-    @CsvSource(textBlock = """
-    1,  1
-    2,  2
-    8,  8
-    """)
+    @CsvSource({
+            "1,'1'",
+            "2,'2'",
+            "8,'8'"
+    })
 
     void intValueOfSingleDigit(int expected, String input) {
         assertEquals(expected, StringUtil.intValueOf(input));
@@ -316,11 +316,11 @@ class StringUtilTest {
     }
 
     @ParameterizedTest
-    @CsvSource(textBlock = """
-    1,  1
-    2,  2
-    8,  8
-    """)
+    @CsvSource({
+            "1,'1'",
+            "2,'2'",
+            "8,'8'"
+    })
 
     void intValueOfWithNullSingleDigit(int expected, String input) {
         assertEquals(Optional.of(expected), StringUtil.intValueOfOptional(input));
