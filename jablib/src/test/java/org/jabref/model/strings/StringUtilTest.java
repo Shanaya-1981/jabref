@@ -164,7 +164,7 @@ class StringUtilTest {
     """)
 
     void join(String expected, String arrayStr, int from, int to) {
-        String[] array = arrayStr.isEmpty() ? new String[0] : arrayStr.split(";");
+        String[] array = arrayStr.split(";");
         assertEquals(expected, StringUtil.join(array, "\\", from, to));
     }
 
